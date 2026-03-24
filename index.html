@@ -638,9 +638,33 @@ function openTopup(name, img, key) {
         searchIcon.classList.replace(isNone ? 'fa-search' : 'fa-times', isNone ? 'fa-times' : 'fa-search');
     }
 
-    // បន្ថែមមុខងារចាប់ប៊ូតុង Back របស់ទូរស័ព្ទឱ្យត្រឡប់ទៅ Home វិញ
-    window.onpopstate = function(event) {
-        goHome();
-    };
+  // ១. មុខងារសម្រាប់បើកផ្ទាំងហ្គេម (PUBG, MLBB...)
+  function openGameDetail(id) {
+      // បង្ហាញផ្ទាំងហ្គេម (Pop-up)
+      document.getElementById(id).style.display = 'block';
+
+      // បន្ថែម "ចំណុចត្រឡប់ក្រោយក្លែងក្លាយ" ទៅក្នុង Browser/Messenger
+      // បន្ទាត់នេះហើយដែលជួយកុំឱ្យវាលោតចេញពី Web ពេលចុច Back លើទូរសព្ទ
+      window.history.pushState({ popup: id }, "");
+  }
+
+  // ២. មុខងារសម្រាប់ចាប់យកការចុច "Back" លើទូរសព្ទ
+  window.onpopstate = function(event) {
+      // រកមើលផ្ទាំងហ្គេមណាដែលកំពុងបើក រួចបិទវាវិញ
+      // (ប្តូរ '.modal' ទៅជា class នៃផ្ទាំងហ្គេមរបស់អ្នក ឧទាហរណ៍ .popup ឬ .game-detail)
+      var allPopups = document.querySelectorAll('.modal'); 
+      allPopups.forEach(function(p) {
+          p.style.display = 'none';
+      });
+  };
+
+  // ៣. មុខងារសម្រាប់បិទផ្ទាំងហ្គេមដោយចុចប៊ូតុង "X" លើអេក្រង់
+  function closeGameDetail(id) {
+      document.getElementById(id).style.display = 'none';
+      // បើគេចុចបិទខ្លួនឯង យើងត្រូវថយ History មកវិញ ១ ជំហាន
+      if (window.history.state && window.history.state.popup) {
+          window.history.back();
+      }
+  }
 </script>
 </body>
