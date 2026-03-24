@@ -638,33 +638,38 @@ function openTopup(name, img, key) {
         searchIcon.classList.replace(isNone ? 'fa-search' : 'fa-times', isNone ? 'fa-times' : 'fa-search');
     }
 
-  // ១. មុខងារសម្រាប់បើកផ្ទាំងហ្គេម (PUBG, MLBB...)
-  function openGameDetail(id) {
-      // បង្ហាញផ្ទាំងហ្គេម (Pop-up)
-      document.getElementById(id).style.display = 'block';
+   function goHome() {
+        // បើមាន History State 'topup' គឺត្រូវដកវាចេញ (Back)
+        if (window.history.state && window.history.state.page === 'topup') {
+            window.history.back();
+        }
+        
+        searchIcon.style.display = 'block';
+        document.getElementById('home-page').style.display = 'block';
+        document.getElementById('topup-page').style.display = 'none';
+        document.getElementById('pay-bar').style.display = 'none';
+    }
 
-      // បន្ថែម "ចំណុចត្រឡប់ក្រោយក្លែងក្លាយ" ទៅក្នុង Browser/Messenger
-      // បន្ទាត់នេះហើយដែលជួយកុំឱ្យវាលោតចេញពី Web ពេលចុច Back លើទូរសព្ទ
-      window.history.pushState({ popup: id }, "");
-  }
+    // ចាប់ប៊ូតុង Back លើទូរស័ព្ទ (សូម្បីក្នុង Messenger)
+    window.onpopstate = function(event) {
+        searchIcon.style.display = 'block';
+        document.getElementById('home-page').style.display = 'block';
+        document.getElementById('topup-page').style.display = 'none';
+        document.getElementById('pay-bar').style.display = 'none';
+    };
 
-  // ២. មុខងារសម្រាប់ចាប់យកការចុច "Back" លើទូរសព្ទ
-  window.onpopstate = function(event) {
-      // រកមើលផ្ទាំងហ្គេមណាដែលកំពុងបើក រួចបិទវាវិញ
-      // (ប្តូរ '.modal' ទៅជា class នៃផ្ទាំងហ្គេមរបស់អ្នក ឧទាហរណ៍ .popup ឬ .game-detail)
-      var allPopups = document.querySelectorAll('.modal'); 
-      allPopups.forEach(function(p) {
-          p.style.display = 'none';
-      });
-  };
+    function toggleMenu() {
+        const menu = document.getElementById('side-menu');
+        const overlay = document.getElementById('overlay');
+        const isOpen = menu.style.right === '0px';
+        menu.style.right = isOpen ? '-280px' : '0px';
+        overlay.style.display = isOpen ? 'none' : 'block';
+    }
 
-  // ៣. មុខងារសម្រាប់បិទផ្ទាំងហ្គេមដោយចុចប៊ូតុង "X" លើអេក្រង់
-  function closeGameDetail(id) {
-      document.getElementById(id).style.display = 'none';
-      // បើគេចុចបិទខ្លួនឯង យើងត្រូវថយ History មកវិញ ១ ជំហាន
-      if (window.history.state && window.history.state.popup) {
-          window.history.back();
-      }
-  }
+    function toggleSearch() {
+        const isNone = searchBox.style.display === 'none' || searchBox.style.display === '';
+        searchBox.style.display = isNone ? 'block' : 'none';
+        searchIcon.classList.replace(isNone ? 'fa-search' : 'fa-times', isNone ? 'fa-times' : 'fa-search');
+    }
 </script>
 </body>
