@@ -479,7 +479,10 @@
         ]
     };
 
-    function openTopup(name, img, key) {
+function openTopup(name, img, key) {
+        // បន្ថែមជួរនេះ ដើម្បីកុំឱ្យចុច Back ហើយលោតចេញពីវេបសាយ
+        history.pushState({page: 'topup'}, ""); 
+
         currentGameKey = key;
         currentGameNameDisplay = name;
         searchIcon.style.display = 'none';
@@ -634,5 +637,10 @@
         searchBox.style.display = isNone ? 'block' : 'none';
         searchIcon.classList.replace(isNone ? 'fa-search' : 'fa-times', isNone ? 'fa-times' : 'fa-search');
     }
+
+    // បន្ថែមមុខងារចាប់ប៊ូតុង Back របស់ទូរស័ព្ទឱ្យត្រឡប់ទៅ Home វិញ
+    window.onpopstate = function(event) {
+        goHome();
+    };
 </script>
 </body>
