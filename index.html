@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MATIN</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Moul&family=Khmer+OS+Battambang&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-body: #ff1493; 
+            --bg-card: #ffffff;
+            --txt-main: #000000;
+            --pink-dark: #ff1493;
+            --header-bg: #ffffff;
+            --txt-divider: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg-body: #000000; 
+            --bg-card: #1a1a1a;
+            --txt-main: #ffffff;
+            --pink-dark: #ff69b4;
+            --header-bg: #1a1a1a;
+            --txt-divider: var(--pink-dark);
+        }
+
+        * { box-sizing: border-box; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Khmer OS Battambang', sans-serif; background: var(--bg-body); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--txt-main); overflow-x: hidden; }
+        
+        img { max-width: 100%; height: auto; background: transparent !important; border: none !important; box-shadow: none !important; object-fit: contain; }
+
+        .site-header { position: fixed; top: 0; width: 100%; max-width: 500px; height: 70px; background: var(--header-bg); display: flex; align-items: center; justify-content: space-between; z-index: 1100; padding: 0 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .site-name { font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 0 8px #ff4500, 0 0 20px #ff0000; animation: fire-burn 0.5s infinite alternate; }
+        @keyframes fire-burn { from { transform: scale(1); } to { transform: scale(1.05); } }
+        
+        .marquee-sticky { position: fixed; top: 70px; width: 100%; max-width: 500px; background: #ff0000; color: white; padding: 8px 0; font-size: 14px; font-weight: bold; z-index: 1050; overflow: hidden; white-space: nowrap; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee-play 15s linear infinite; }
+        @keyframes marquee-play { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        .app-container { width: 100%; max-width: 500px; padding-top: 120px; flex: 1; padding-bottom: 30px; }
+        .h-btn { padding: 6px 12px; background: rgba(255,20,147,0.1); border-radius: 8px; border: 1px solid var(--pink-dark); cursor: pointer; color: var(--pink-dark); font-weight: bold; display: flex; align-items: center; gap: 5px; }
+
+        .section-divider { padding: 20px 20px 10px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; color: var(--txt-divider); }
+        .section-divider::before { content: ""; width: 18px; height: 3px; background: var(--txt-divider); border-radius: 10px; }
+
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 15px; }
+        
+        .menu-card { background: var(--bg-card); padding: 15px 5px; border-radius: 20px; text-align: center; text-decoration: none; color: var(--txt-main); display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid rgba(255,20,147,0.1); }
+        .menu-card img { width: 42px; height: 42px; margin-bottom: 8px; }
+        .game-card img { width: 55px !important; height: 55px !important; }
+        .menu-card span { font-weight: bold; font-size: 11px; }
+
+        .footer-sticky { width: 100%; max-width: 500px; background: var(--bg-card); padding: 20px; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); }
+        .footer-text { font-size: 13px; color: var(--txt-main); margin-top: 10px; line-height: 1.6; opacity: 0.8; }
+
+        #nyOverlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 2000; 
+            display: none; align-items: center; justify-content: center; 
+            flex-direction: column; text-align: center; 
+            pointer-events: none; opacity: 1; transition: opacity 0.5s;
+        }
+        #fireworksCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .ny-text { 
+            font-family: 'Moul', serif; font-size: 35px; 
+            color: #ffd700; text-shadow: 0 0 15px #ff4500, 0 0 30px #ffd700, 2px 2px 5px #000; 
+            z-index: 2001; line-height: 1.8; padding: 0 20px; 
+            animation: text-pulse 1s infinite;
+        }
+        @keyframes text-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="nyOverlay">
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="ny-text">សួស្ដីឆ្នាំថ្មី<br>ប្រពៃណីជាតិខ្មែរ</div>
+</div>
+
+<header class="site-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+        <img src="denzo.png" style="width:45px; height:45px; border-radius:12px;">
+        <span class="site-name">MATIN</span>
+    </div>
+    <div style="display: flex; gap: 8px;">
+        <button class="h-btn" onclick="toggleLang()" id="langBtn"><span>🇰🇭 KH</span></button>
+        <button class="h-btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-moon"></i></button>
+    </div>
+</header>
+
+<div class="marquee-sticky">
+    <div class="marquee-text" id="marqueeTxt">សូមស្វាគមន៍មកកាន់ MATIN! សេវាកម្មរហ័សទាន់ចិត្ត សុវត្តិភាព100% និង ទំនុកចិត្តខ្ពស់បំផុត</div>
+</div>
+
+<div class="app-container">
+    <div class="section-divider" id="secPopular">កម្មវិធីប្រើ free</div>
+    <div class="grid-container">
+        <a href="https://random.matintopup.store" class="menu-card">
+            <img src="20260401_173535.png">
+            <span class="label" data-kh="បង្វិលដោយចៃដន្យ" data-en="Random picker">បង្វិលដោយចៃដន្យ</span>
+        </a>
+        <a href="https://ai.matintopup.store" class="menu-card">
+            <img src="20260404_172533.png">
+            <span class="label" data-kh="អត្ថបទទៅសំឡេង" data-en="TEXT TO VOICE">អត្ថបទទៅសំឡេង</span>
+        </a>
+        <a href="http://love.matintopup.store" class="menu-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2904/2904973.png">
+            <span class="label" data-kh="សារភាពស្នេហ៍" data-en="Love Message">សារភាពស្នេហ៍</span>
+        </a>
+        <a href="https://clone.matintopup.store" class="menu-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2541/2541991.png">
+            <span class="label" data-kh="ក្លូនអក្សរ" data-en="Text Clone">ក្លូនអក្សរ</span>
+        </a>
+    </div>
+    
+    <div class="section-divider" id="secTopup">បុកលុយហ្គេមនិងផ្សារ</div>
+    <div class="grid-container">
+        <a href="https://www.matintopup.store" class="menu-card game-card">
+            <img src="matin.png">
+            <span class="label" data-kh="បុកលុយហ្គេម" data-en="GameTopUp">បុកលុយហ្គេម</span>
+        </a>
+        <a href="https://shop.matintopup.store" class="menu-card game-card">
+            <img src="shop.png">
+            <span class="label" data-kh="ផ្សារឧបករណ៍លេងហ្គេម" data-en="Game console market">ផ្សារឧបករណ៍លេងហ្គេម</span>
+        </a>
+    </div>
+
+    <div class="section-divider" id="secAdmin">Admin / ទំនាក់ទំនង</div>
+    <div class="grid-container">
+        <a href="https://www.facebook.com/share/1GgJxKwz6x/" target="_blank" class="menu-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png">
+            <span>Page</span>
+        </a>
+        <a href="https://www.tiktok.com/@matin.404?_r=1&_t=ZS-95CJG5elgV2" target="_blank" class="menu-card">
+            <img src="tiktok.png">
+            <span>TikTok</span>
+        </a>
+        <a href="https://t.me/matintopup" target="_blank" class="menu-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png">
+            <span>Telegram groub</span>
+        </a>
+        <a href="https://t.me/Matintopup168" target="_blank" class="menu-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png">
+            <span>Telegram admin</span>
+        </a>
+    </div>
+</div>
+
+<footer class="footer-sticky">
+    <b id="footerAbout">អំពី MATIN</b>
+    <p class="footer-text" id="footerDesc">វេទិកាដែលអ្នកទុកចិត្តសម្រាប់សេវាកម្មនិងឧបករណ៍ឌីជីថល យើងផ្តល់នូវដំណោះស្រាយរហ័ស ទុកចិត្តបាន និងមានតម្លៃសមរម្យសម្រាប់អ្នកលេងហ្គេម អ្នកបង្កើតខ្លឹមសារ និងអាជីវកម្ម</p>
+</footer>
+
+<script>
+    // --- កន្លែងសម្រាប់ពូ "on" ឬ "off" ---
+    var showNewYear = "on"; 
+    var nyTimeLimit = 10000; 
+
+    window.onload = function() {
+        if(showNewYear === "on") {
+            const overlay = document.getElementById('nyOverlay');
+            overlay.style.display = 'flex';
+            initFireworks();
+            
+            setTimeout(function() {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            }, nyTimeLimit);
+        }
+    }
+
+    function initFireworks() {
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        let romdouls = [];
+
+        function drawRomdoul(x, y, size, angle) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+            ctx.fillStyle = "#ffd700";
+            for(let i=0; i<3; i++) {
+                ctx.rotate(Math.PI * 2 / 3);
+                ctx.beginPath(); ctx.ellipse(0, size, size/2, size, 0, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        class Romdoul {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 5 + 7;
+                // បង្កើនល្បឿនធ្លាក់ឱ្យរាងលឿន
+                this.speed = Math.random() * 3 + 2.5; 
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.12;
+            }
+            update() {
+                this.y += this.speed;
+                this.angle += this.spin;
+                if (this.y > canvas.height) { this.y = -20; this.x = Math.random() * canvas.width; }
+            }
+            draw() { drawRomdoul(this.x, this.y, this.size, this.angle); }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                // បង្កើនកម្លាំងផ្ទុះឱ្យលឿន និងខ្លាំង
+                const force = Math.random() * 18; 
+                this.velocity = { x: Math.cos(angle) * force, y: Math.sin(angle) * force };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.015; // បាត់ទៅវិញលឿនបន្តិច
+                this.friction = 0.95;
+                this.gravity = 0.22;
+            }
+            update() {
+                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x; this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath();
+                ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+                ctx.fill(); ctx.restore();
+            }
+        }
+
+        for(let i=0; i<30; i++) romdouls.push(new Romdoul());
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.4) + 100;
+            const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            for (let i = 0; i < 120; i++) { particles.push(new Particle(x, y, color)); }
+        }
+
+        function animate() {
+            if (document.getElementById('nyOverlay').style.display === 'none') return;
+            requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            romdouls.forEach(r => { r.update(); r.draw(); });
+            // បង្កើនភាពញឹកញាប់នៃការបាញ់កាំជ្រួច
+            if (Math.random() < 0.18) createFirework(); 
+            particles.forEach((p, i) => {
+                if (p.alpha <= 0) particles.splice(i, 1); else { p.update(); p.draw(); }
+            });
+        }
+        animate();
+    }
+
+    function initSmartBack() {
+        window.history.pushState({ page: 'home' }, '', window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState({ page: 'home' }, '', window.location.href);
+        };
+    }
+    initSmartBack();
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('themeIcon').className = isDark ? "fas fa-sun" : "fas fa-moon";
+    }
+
+    function toggleLang() {
+        const btn = document.getElementById('langBtn');
+        const isKhmer = btn.innerText.includes('KH');
+        btn.innerHTML = isKhmer ? '<span>🇺🇲 EN</span>' : '<span>🇰🇭 KH</span>';
+        document.getElementById('secTopup').innerText = isKhmer ? "Game TopUp & Market" : "បុកលុយហ្គេមនិងផ្សារ";
+        document.getElementById('secPopular').innerText = isKhmer ? "Free user program" : "កម្មវិធីប្រើ free";
+        document.getElementById('secAdmin').innerText = isKhmer ? "Admin / Contact" : "Admin / ទំនាក់ទំនង";
+        document.getElementById('footerAbout').innerText = isKhmer ? "About MATIN" : "អំពី MATIN";
+        document.querySelectorAll('.label').forEach(el => {
+            el.innerText = isKhmer ? el.getAttribute('data-en') : el.getAttribute('data-kh');
+        });
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) { registration.unregister(); }
+        });
+    }
+</script>
+</body>
+</html>
