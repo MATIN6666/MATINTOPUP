@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MATIN TOPUP</title>
+    
+    <meta itemprop="name" content="MATIN TOPUP">
+    <meta itemprop="image" content="https://matintopup.store/MATINTOPUP/denzo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="MATIN">
+    <link rel="apple-touch-icon" href="denzo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Moul&family=Khmer+OS+Battambang&family=Righteous&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        (function() {
+            const theme = localStorage.getItem('matinTheme');
+            if (theme === 'dark') document.documentElement.classList.add('dark-mode');
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-body: #ff1493; --bg-card: #ffffff; --txt-main: #000000;
+            --pink-dark: #ff1493; --header-bg: #ffffff; --txt-divider: #ffffff;
+        }
+        .dark-mode, .dark-mode body {
+            --bg-body: #000000 !important; --bg-card: #1a1a1a; --txt-main: #ffffff;
+            --pink-dark: #ff69b4; --header-bg: #1a1a1a; --txt-divider: var(--pink-dark);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'Khmer OS Battambang', sans-serif; 
+            background: var(--bg-body); 
+            margin: 0; display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; color: var(--txt-main); overflow-x: hidden;
+        }
+
+        .site-header { position: fixed; top: 0; width: 100%; height: 75px; background: var(--header-bg); display: flex; align-items: center; justify-content: space-between; z-index: 1100; padding: 0 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.3); }
+        
+        .site-name { 
+            font-size: 24px; 
+            font-weight: 900; 
+            color: #ffffff; 
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transform: skew(-10deg); 
+            display: inline-block;
+            white-space: nowrap;
+            text-shadow: 
+                1px 1px 0px #ff1493, 
+                2px 2px 0px #ff1493, 
+                3px 3px 0px #ff1493, 
+                4px 4px 0px #ff1493, 
+                5px 5px 0px #c71585, 
+                0 0 10px rgba(255, 20, 147, 0.4),
+                6px 6px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            animation: text-pulse 1.5s infinite alternate;
+        }
+
+        @keyframes text-pulse {
+            from { transform: skew(-10deg) scale(1); }
+            to { transform: skew(-10deg) scale(1.03); }
+        }
+
+        .lang-kh { font-family: 'Moul', serif; font-size: 20px; letter-spacing: 0px; }
+        .lang-en { font-family: 'Righteous', cursive; font-size: 26px; }
+
+        .marquee-sticky { position: fixed; top: 75px; width: 100%; background: #ff0000; color: white; padding: 8px 0; font-size: 14px; font-weight: bold; z-index: 1050; overflow: hidden; white-space: nowrap; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee-play 12s linear infinite; }
+        @keyframes marquee-play { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        .app-container { width: 100%; padding-top: 130px; flex: 1; padding-bottom: 30px; }
+        .h-btn { padding: 6px 12px; background: rgba(255,20,147,0.1); border-radius: 8px; border: 1px solid var(--pink-dark); cursor: pointer; color: var(--pink-dark); font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        
+        .section-divider { padding: 20px 20px 10px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; color: var(--txt-divider); }
+        .section-divider::before { content: ""; width: 18px; height: 3px; background: var(--txt-divider); border-radius: 10px; }
+
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 0 15px 15px; }
+        .menu-card { background: var(--bg-card); padding: 15px 5px; border-radius: 20px; text-align: center; text-decoration: none; color: var(--txt-main); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid rgba(255,20,147,0.1); }
+        .menu-card span { font-weight: bold; font-size: 11px; width: 100%; display: block; text-align: center; }
+
+        .footer-sticky { width: 100%; background: var(--bg-card); padding: 20px; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); }
+        
+        #nyOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; pointer-events: none; transition: opacity 0.5s; }
+        #fireworksCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .ny-text { font-family: 'Moul', serif; font-size: 35px; color: #ffd700; text-shadow: 0 0 15px #ff4500, 0 0 30px #ffd700, 2px 2px 5px #000; z-index: 2001; line-height: 1.8; }
+    </style>
+</head>
+<body>
+
+<div id="nyOverlay">
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="ny-text">សួស្ដីឆ្នាំថ្មី<br>ប្រពៃណីជាតិខ្មែរ</div>
+</div>
+
+<header class="site-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+        <img src="denzo.png" style="width:48px; height:48px; border-radius:12px; border: 2px solid #ff1493;">
+        <span id="siteNameHeader" class="site-name lang-kh">ម៉ាទីន</span>
+    </div>
+    <div style="display: flex; gap: 8px;">
+        <button class="h-btn" onclick="toggleLang()" id="langBtn"><span>🇰🇭 KH</span></button>
+        <button class="h-btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-moon"></i></button>
+    </div>
+</header>
+
+<div class="marquee-sticky">
+    <div class="marquee-text" id="marqueeTxt">សូមស្វាគមន៍មកកាន់ MATIN! សេវាកម្មរហ័សទាន់ចិត្ត សុវត្តិភាព100% និង ទំនុកចិត្តខ្ពស់បំផុត</div>
+</div>
+
+<div class="app-container">
+    <div class="section-divider" id="secTopup">បុកលុយហ្គេមនិងផ្សារ</div>
+    <div class="grid-container">
+        <a href="https://matin.matintopup.store" class="menu-card"><img src="matin.png" style="width:55px;height:55px;"><span class="label" data-kh="បុកលុយហ្គេម" data-en="Game TopUp">បុកលុយហ្គេម</span></a>
+        <a href="https://shop.matintopup.store" class="menu-card"><img src="shop.png" style="width:55px;height:55px;"><span class="label" data-kh="ផ្សារឧបករណ៍លេងហ្គេម" data-en="Game Market">ផ្សារឧបករណ៍លេងហ្គេម</span></a>
+    </div>
+    
+    <div class="section-divider" id="secPopular">កម្មវិធីប្រើហ្រ្វី</div>
+    <div class="grid-container">
+        <a href="https://random.matintopup.store" class="menu-card"><img src="20260401_173535.png" style="width:42px;height:42px;"><span class="label" data-kh="បង្វិលដោយចៃដន្យ" data-en="Random Picker">បង្វិលដោយចៃដន្យ</span></a>
+        <a href="https://ai.matintopup.store" class="menu-card"><img src="20260404_172533.png" style="width:42px;height:42px;"><span class="label" data-kh="អត្ថបទទៅសំឡេង" data-en="Text to Voice">អត្ថបទទៅសំឡេង</span></a>
+        <a href="http://love.matintopup.store" class="menu-card"><img src="https://cdn-icons-png.flaticon.com/512/2904/2904973.png" style="width:42px;height:42px;"><span class="label" data-kh="សារភាពស្នេហ៍" data-en="Love Message">សារភាពស្នេហ៍</span></a>
+        <a href="https://scan.matintopup.store" class="menu-card"><img src="20260406_020829.png" style="width:42px;height:42px;"><span class="label" data-kh="ស្កេនដើម្បីបានរង្វាន់" data-en="Scan Rewards">ស្កេនដើម្បីបានរង្វាន់</span></a>
+        <a href="http://boxlucky.matintopup.store" class="menu-card"><img src="box.png" style="width:42px;height:42px;"><span class="label" data-kh="ប្រអប់សំណាង" data-en="Lucky Box">ប្រអប់សំណាង</span></a>
+        <a href="https://clone.matintopup.store" class="menu-card"><img src="https://cdn-icons-png.flaticon.com/512/2541/2541991.png" style="width:42px;height:42px;"><span class="label" data-kh="ក្លូនអក្សរ" data-en="Text Clone">ក្លូនអក្សរ</span></a>
+    </div>
+
+    <div class="section-divider" id="secAdmin">Admin / ទំនាក់ទំនង</div>
+    <div class="grid-container">
+        <a href="https://www.facebook.com/share/1AmgP9CspQ/" target="_blank" class="menu-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/2048px-2021_Facebook_icon.svg.png" style="width:42px;height:42px;"><span>Page</span></a>
+        <a href="https://www.tiktok.com/@matin.404?_r=1&_t=ZS-95CJG5elgV2" target="_blank" class="menu-card"><img src="tiktok.png" style="width:42px;height:42px;"><span>TikTok</span></a>
+        <a href="https://t.me/matintopup168" target="_blank" class="menu-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" style="width:42px;height:42px;"><span>Telegram</span></a>
+        <a href="https://t.me/matintopup" target="_blank" class="menu-card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" style="width:42px;height:42px;"><span>Telegram Group</span></a>
+    </div>
+</div>
+
+<footer class="footer-sticky">
+    <b id="footerAbout">អំពី MATIN</b>
+    <p class="footer-text" id="footerDesc">វេទិកាដែលអ្នកទុកចិត្តសម្រាប់សេវាកម្មនិងឧបករណ៍ឌីជីថល យើងផ្តល់នូវដំណោះស្រាយរហ័ស ទុកចិត្តបាន និងមានតម្លៃសមរម្យសម្រាប់អ្នកលេងហ្គេម អ្នកបង្កើតខ្លឹមសារ និងអាជីវកម្ម</p>
+</footer>
+
+<script>
+    var showNewYear = "on"; 
+    var nyTimeLimit = 8000; 
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('matinTheme');
+        const savedLang = localStorage.getItem('matinLang');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeIcon').className = "fas fa-sun";
+        }
+        if (savedLang === 'EN') applyLang('EN');
+
+        var hasSeenNY = sessionStorage.getItem("hasSeenNewYear");
+        if(showNewYear === "on" && !hasSeenNY) {
+            const overlay = document.getElementById('nyOverlay');
+            overlay.style.display = 'flex';
+            initFireworks();
+            sessionStorage.setItem("hasSeenNewYear", "true");
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            }, nyTimeLimit);
+        }
+    });
+
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle('dark-mode');
+        document.body.classList.toggle('dark-mode', isDark);
+        document.getElementById('themeIcon').className = isDark ? "fas fa-sun" : "fas fa-moon";
+        localStorage.setItem('matinTheme', isDark ? 'dark' : 'light');
+    }
+
+    function toggleLang() {
+        const btn = document.getElementById('langBtn');
+        const nextLang = btn.innerText.includes('KH') ? 'EN' : 'KH';
+        applyLang(nextLang);
+        localStorage.setItem('matinLang', nextLang);
+    }
+
+    function applyLang(lang) {
+        const isEn = (lang === 'EN');
+        document.getElementById('langBtn').innerHTML = isEn ? '<span>🇺🇲 EN</span>' : '<span>🇰🇭 KH</span>';
+        
+        // ដូរឈ្មោះវេបសាយ 3D
+        const siteName = document.getElementById('siteNameHeader');
+        if (isEn) {
+            siteName.innerText = 'MATIN';
+            siteName.classList.remove('lang-kh');
+            siteName.classList.add('lang-en');
+        } else {
+            siteName.innerText = 'ម៉ាទីន';
+            siteName.classList.remove('lang-en');
+            siteName.classList.add('lang-kh');
+        }
+
+        // ដូរចំណងជើងផ្នែកនីមួយៗ (Fix ត្រង់នេះ)
+        document.getElementById('secTopup').innerText = isEn ? "TopUp & Market" : "បុកលុយហ្គេមនិងផ្សារ";
+        document.getElementById('secPopular').innerText = isEn ? "Freeware" : "កម្មវិធីប្រើហ្រ្វី";
+        document.getElementById('secAdmin').innerText = isEn ? "Admin / Contact" : "Admin / ទំនាក់ទំនង";
+        
+        // ដូរឈ្មោះអមជាមួយ Logo ក្នុង Card
+        document.querySelectorAll('.label').forEach(el => {
+            el.innerText = isEn ? el.getAttribute('data-en') : el.getAttribute('data-kh');
+        });
+    }
+
+    function initFireworks() {
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particles = []; let romdouls = [];
+        function drawRomdoul(x, y, size, angle) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.fillStyle = "#888888"; 
+            for(let i=0; i<3; i++) { ctx.rotate(Math.PI * 2 / 3); ctx.beginPath(); ctx.ellipse(0, size, size/2, size, 0, 0, Math.PI * 2); ctx.fill(); }
+            ctx.restore();
+        }
+        class Romdoul {
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * -canvas.height; this.size = Math.random() * 5 + 7; this.speed = Math.random() * 1.5 + 1; this.angle = Math.random() * Math.PI * 2; this.spin = (Math.random() - 0.5) * 0.05; }
+            update() { this.y += this.speed; this.angle += this.spin; if (this.y > canvas.height) { this.y = -20; this.x = Math.random() * canvas.width; } }
+            draw() { drawRomdoul(this.x, this.y, this.size, this.angle); }
+        }
+        class Particle {
+            constructor(x, y, color) { this.x = x; this.y = y; this.color = color; const angle = Math.random() * Math.PI * 2; const force = Math.random() * 8; this.velocity = { x: Math.cos(angle) * force, y: Math.sin(angle) * force }; this.alpha = 1; this.decay = 0.02; }
+            update() { this.x += this.velocity.x; this.y += this.velocity.y; this.velocity.y += 0.15; this.alpha -= this.decay; }
+            draw() { ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); ctx.restore(); }
+        }
+        for(let i=0; i<15; i++) romdouls.push(new Romdoul());
+        function animate() {
+            if (document.getElementById('nyOverlay').style.display === 'none') return;
+            requestAnimationFrame(animate);
+            ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'lighter'; romdouls.forEach(r => { r.update(); r.draw(); });
+            if (Math.random() < 0.05) { const x = Math.random() * canvas.width; const y = Math.random() * (canvas.height * 0.45); const color = `hsl(${Math.random() * 360}, 100%, 75%)`; for(let i=0; i<50; i++) particles.push(new Particle(x, y, color)); }
+            particles.forEach((p, i) => { if(p.alpha <= 0) particles.splice(i, 1); else { p.update(); p.draw(); } });
+        }
+        animate();
+    }
+</script>
+</body>
+</html>
