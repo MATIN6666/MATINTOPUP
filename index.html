@@ -277,7 +277,7 @@
             requestAnimationFrame(animate);
 
             if(showFireworks === "on") {
-                fwCtx.globalCompositeOperation = 'destination-out'; fwCtx.fillStyle = 'rgba(0, 0, 0, 0.25)'; fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+                fwCtx.globalCompositeOperation = 'destination-out'; fwCtx.fillStyle = 'rgba(0, 0, 0, 0.10)'; fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
                 fwCtx.globalCompositeOperation = 'lighter';
                 if (Math.random() < 0.05) {
                     const x = Math.random() * fwCanvas.width; const y = Math.random() * (fwCanvas.height * 0.4); const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
